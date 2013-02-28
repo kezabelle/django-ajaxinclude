@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 from setuptools import setup, find_packages
-from helpfulfields import version
+from ajaxinclude import version
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
