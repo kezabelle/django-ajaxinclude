@@ -46,3 +46,20 @@ you refresh. This is because behind the scenes, the provided
 passed to it in ``request.GET['files']``. Currently it does so very naively,
 but I'll flesh it out to handle errors and exceptions at some point.
 
+Dependencies
+------------
+
+First and foremost:
+
+  * Django 1.4 (all I've tried so far)
+  * ajaxInclude.js v0.1.0 - 2012-08-17 - da58c8867aa56b03c0799ea7d0b6baaaae228d97
+
+Beyond that, for the purposes of testing it out via the method documented
+above, you'll require:
+
+  * `importd`_
+  * fhurl
+  * gunicorn
+  * smarturls
+
+.. _importd: http://pythonhosted.org/importd/
