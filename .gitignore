@@ -1,0 +1,6 @@
+*.pyc
+django_ajaxinclude.egg-info/PKG-INFO
+django_ajaxinclude.egg-info/SOURCES.txt
+django_ajaxinclude.egg-info/dependency_links.txt
+django_ajaxinclude.egg-info/requires.txt
+django_ajaxinclude.egg-info/top_level.txt
