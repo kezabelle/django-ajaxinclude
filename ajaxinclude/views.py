@@ -8,10 +8,10 @@ class AjaxIncludeProxy(TemplateView):
         return ['ajaxinclude/entries.html']
 
     def get_files(self):
-        data = self.request.GET.getlist('files')
+        data = self.request.GET.get('files')
         if data is None:
             raise Http404('no files')
-        safe_files = [f.strip() for f in data if f.strip()]
+        safe_files = [f.strip() for f in data.split(',') if f.strip()]
         if len(safe_files) < 1:
             raise Http404('no files')
         return safe_files

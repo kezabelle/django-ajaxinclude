@@ -7,8 +7,51 @@
         <script type="text/javascript" src="{% static 'admin/js/jquery.js' %}"></script>
         <script type="text/javascript">jQuery.noConflict()</script>
         <script type="text/javascript" src="{% static 'ajaxinclude/js/ajaxInclude.js' %}"></script>
+        <script type="text/javascript">
+            jQuery(document).ready(function() {
+                jQuery(".unproxied [data-append], .unproxied [data-replace], .unproxied [data-after], .unproxied [data-before]").ajaxInclude();
+                jQuery("[data-append],[data-replace], [data-after], [data-before]").ajaxInclude({ proxy: '{% url ajaxinclude %}?&files=' });
+            });
+        </script>
     </head>
     <body>
-
+        <div class="unproxied">
+            <h1>Populating in 4 requests</h1>
+            <div data-after="{% url fixed_output %}">
+                <a href="{% url fixed_output %}">This should show the text <b>"hello world"</b></a>
+            </div>
+            <div data-before="{% url user_text_output random_text1 random_text2 %}">
+                <a href="{% url user_text_output random_text1 random_text2 %}">This should show <b>two random UUIDs from the URL</b></a>
+            </div>
+            <div data-append="{% url user_number_output random_number %}">
+                <a href="{% url user_number_output random_number %}">This should show <b>a number from the URL</b></a>
+            </div>
+            <div data-replace="{% url random_output %}">
+                <a href="{% url random_output %}">This should show <b>a random number</b></a>
+            </div>
+        </div>
+        <hr>
+        <div class="proxied">
+            <h1>Populating the same data in one request</h1>
+            <div data-after="{% url fixed_output %}">
+                <a href="{% url fixed_output %}">This should show the text <b>"hello world"</b></a>
+            </div>
+            <div data-before="{% url user_text_output random_text1 random_text2 %}">
+                <a href="{% url user_text_output random_text1 random_text2 %}">This should show <b>two random UUIDs from the URL</b></a>
+            </div>
+            <div data-append="{% url user_number_output random_number %}">
+                <a href="{% url user_number_output random_number %}">This should show <b>a number from the URL</b></a>
+            </div>
+            <div data-replace="{% url random_output %}">
+                <a href="{% url random_output %}">This should show <b>a random number</b></a>
+            </div>
+        </div>
+        <hr>
+        <p>For more information, see the original <a href="http://filamentgroup.com/lab/ajax_includes_modular_content/">article by
+            <a href="https://twitter.com/filamentgroup">filamentgroup</a>, and see the associated
+            <a href="https://github.com/filamentgroup/Ajax-Include-Pattern/">GitHub repository</a>
+        </p>
+        <p>This repository comes with a copy of their ajaxInclude.js file, and an implementation of their quickconcat, which is
+            not limited to static files, and can instead proxy other Django views to respond with.</p>
     </body>
 </html>
