@@ -2,6 +2,10 @@ from django.core.urlresolvers import resolve
 from django.views.generic import TemplateView
 from django.http import Http404
 
+class FakeResponse(object):
+    status_code = 999
+    content = None
+
 class AjaxIncludeProxy(TemplateView):
 
     def get_template_names(self):
@@ -20,14 +24,13 @@ class AjaxIncludeProxy(TemplateView):
         data_for_context = {}
         for file in self.files:
             callback, its_args, its_kwargs = resolve(file)
-            response = callback(self.request, *its_args, **its_kwargs)
             try:
-                for_sending = response.content
-            except AttributeError:
-                # Didn't return a response, perhaps because the callback
-                # detected is_ajax() and fed it something else.
-                for_sending = response
-            data_for_context[file] = for_sending
+                response = callback(self.request, *its_args, **its_kwargs)
+            except Http404:
+                response = FakeResponse()
+            if response.status_code == 200:
+                data = response.content
+                data_for_context[file] = data
         ctx = super(AjaxIncludeProxy, self).get_context_data(*args, **kwargs)
         ctx.update(files=data_for_context)
         return ctx
@@ -35,3 +38,4 @@ class AjaxIncludeProxy(TemplateView):
     def get(self, request, *args, **kwargs):
         self.files = self.get_files()
         return super(AjaxIncludeProxy, self).get(request, *args, **kwargs)
+

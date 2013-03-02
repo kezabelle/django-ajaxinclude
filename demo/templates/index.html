@@ -10,7 +10,8 @@
         <script type="text/javascript">
             jQuery(document).ready(function() {
                 jQuery(".unproxied [data-append], .unproxied [data-replace], .unproxied [data-after], .unproxied [data-before]").ajaxInclude();
-                jQuery("[data-append],[data-replace], [data-after], [data-before]").ajaxInclude({ proxy: '{% url ajaxinclude %}?&files=' });
+                jQuery(".proxied [data-append], .proxied [data-replace], .proxied [data-after], .proxied [data-before]").ajaxInclude({ proxy: '{% url ajaxinclude %}?&files=' });
+                jQuery(".failures [data-append], .failures [data-replace], .failures [data-after], .failures [data-before]").ajaxInclude({ proxy: '{% url ajaxinclude %}?&files=' });
             });
         </script>
     </head>
@@ -47,6 +48,20 @@
             </div>
         </div>
         <hr>
+        <div class="failures">
+            <h1>Partial population (gracefully handle invalid URLs)</h1>
+            <div data-after="{% url fixed_output %}">
+                <a href="{% url fixed_output %}">This should show the text <b>"hello world"</b></a>
+            </div>
+            <div data-before="/a/b/c/d/">
+                <a href="/a/b/c/d/">This should show <b>nothing, because it's a 404</b></a>
+            </div>
+            {% comment %}
+            <div data-replace="{% url admin:auth_user_change 1 %}">
+                <a href="{% url admin:auth_user_change 1 %}">This should show <b>a random number</b></a>
+            </div>
+            {% endcomment %}
+        </div>
         <p>For more information, see the original <a href="http://filamentgroup.com/lab/ajax_includes_modular_content/">article by
             <a href="https://twitter.com/filamentgroup">filamentgroup</a>, and see the associated
             <a href="https://github.com/filamentgroup/Ajax-Include-Pattern/">GitHub repository</a>

@@ -10,6 +10,11 @@ d(INSTALLED_APPS=[
     'ajaxinclude',
 ])
 
+from django.contrib import admin
+admin.autodiscover()
+d.urlpatterns += d.patterns('',
+    d.url(r'^admin/', include(admin.site.urls))
+)
 
 @d("/random/<int:input>/", name='user_number_output')
 def randomised(request, input):
