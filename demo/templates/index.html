@@ -11,7 +11,7 @@
             jQuery(document).ready(function() {
                 jQuery(".unproxied [data-append], .unproxied [data-replace], .unproxied [data-after], .unproxied [data-before]").ajaxInclude();
                 jQuery(".proxied [data-append], .proxied [data-replace], .proxied [data-after], .proxied [data-before]").ajaxInclude({ proxy: '{% url ajaxinclude %}?&files=' });
-                jQuery(".failures [data-append], .failures [data-replace], .failures [data-after], .failures [data-before]").ajaxInclude({ proxy: '{% url ajaxinclude %}?&files=' });
+                jQuery(".failures [data-after]").ajaxInclude({ proxy: '{% url ajaxinclude %}?&files=' });
             });
         </script>
     </head>
@@ -50,17 +50,21 @@
         <hr>
         <div class="failures">
             <h1>Partial population (gracefully handle invalid URLs)</h1>
-            <div data-after="{% url fixed_output %}">
-                <a href="{% url fixed_output %}">This should show the text <b>"hello world"</b></a>
+            <div data-after="{% url random_output %}">
+                <a href="{% url random_output %}">This should show the text <b>a random number</b></a>
             </div>
-            <div data-before="/a/b/c/d/">
+            <div data-after="/a/b/c/d/">
                 <a href="/a/b/c/d/">This should show <b>nothing, because it's a 404</b></a>
             </div>
-            {% comment %}
-            <div data-replace="{% url admin:auth_user_change 1 %}">
-                <a href="{% url admin:auth_user_change 1 %}">This should show <b>a random number</b></a>
+            <div data-after="{% url admin:auth_user_change 1 %}">
+                <a href="{% url admin:auth_user_change 1 %}">This should show <b>unparsed HTML for the admin login screen</b></a>
             </div>
-            {% endcomment %}
+            <div data-after="{% url http_403 %}">
+                <a href="{% url http_403 %}">This should show <b>nothing, because we don't have access!</b></a>
+            </div>
+            <div data-after="{% url http_500 %}">
+                <a href="{% url http_500 %}">This should show <b>nothing, because the server found an error!</b></a>
+            </div>
         </div>
         <p>For more information, see the original <a href="http://filamentgroup.com/lab/ajax_includes_modular_content/">article by
             <a href="https://twitter.com/filamentgroup">filamentgroup</a>, and see the associated

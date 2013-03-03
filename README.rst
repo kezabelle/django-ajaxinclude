@@ -26,6 +26,7 @@ This assumes you're familiar with `Django`_, `virtualenv`_,
     $ cd django-ajaxinclude
     $ python setup.py develop
     $ cd demo
+    $ ./run.py syncdb --noinput
     $ ./run.py
 
 Open your browser and point it at ``http://127.0.0.1:8000``, and see that

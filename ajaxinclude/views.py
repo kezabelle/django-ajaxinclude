@@ -1,4 +1,5 @@
-from django.core.urlresolvers import resolve
+from django.core.urlresolvers import resolve, Resolver404
+from django.template.response import ContentNotRenderedError
 from django.views.generic import TemplateView
 from django.http import Http404
 
@@ -23,13 +24,20 @@ class AjaxIncludeProxy(TemplateView):
     def get_context_data(self, *args, **kwargs):
         data_for_context = {}
         for file in self.files:
-            callback, its_args, its_kwargs = resolve(file)
             try:
+                callback, its_args, its_kwargs = resolve(file)
                 response = callback(self.request, *its_args, **its_kwargs)
+            except Resolver404:
+                # calling resolve() may not work
+                response = FakeResponse()
             except Http404:
+                # the callback itself might say it shouldn't be found.
                 response = FakeResponse()
             if response.status_code == 200:
-                data = response.content
+                try:
+                    data = response.content
+                except ContentNotRenderedError:
+                    data = response.render().content
                 data_for_context[file] = data
         ctx = super(AjaxIncludeProxy, self).get_context_data(*args, **kwargs)
         ctx.update(files=data_for_context)
