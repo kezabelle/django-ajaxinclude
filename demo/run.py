@@ -2,8 +2,11 @@
 from uuid import uuid4
 from random import randint
 from importd import d
+from django.conf.urls import include
+from django.http import HttpResponsePermanentRedirect, HttpResponseServerError, HttpResponseForbidden
 
 d(INSTALLED_APPS=[
+    'django.contrib.sessions',
     'django.contrib.contenttypes',
     'django.contrib.auth',
     'django.contrib.admin',
@@ -15,6 +18,18 @@ admin.autodiscover()
 d.urlpatterns += d.patterns('',
     d.url(r'^admin/', include(admin.site.urls))
 )
+
+@d('/bad/location/', name='http_301')
+def gone(request):
+    return HttpResponsePermanentRedirect(redirect_to='http://google.com/')
+
+@d('/bad/server/', name='http_500')
+def ise(request):
+    return HttpResponseServerError('oops')
+
+@d('/bad/access/', name='http_403')
+def forbidden(request):
+    return HttpResponseForbidden('go away!')
 
 @d("/random/<int:input>/", name='user_number_output')
 def randomised(request, input):
