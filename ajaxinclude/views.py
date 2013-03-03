@@ -5,7 +5,7 @@ from django.http import Http404
 
 class FakeResponse(object):
     status_code = 999
-    content = None
+    content = u''
 
 class AjaxIncludeProxy(TemplateView):
 
@@ -33,12 +33,15 @@ class AjaxIncludeProxy(TemplateView):
             except Http404:
                 # the callback itself might say it shouldn't be found.
                 response = FakeResponse()
+
             if response.status_code == 200:
                 try:
                     data = response.content
                 except ContentNotRenderedError:
                     data = response.render().content
                 data_for_context[file] = data
+            else:
+                data_for_context[file] = FakeResponse.content
         ctx = super(AjaxIncludeProxy, self).get_context_data(*args, **kwargs)
         ctx.update(files=data_for_context)
         return ctx
